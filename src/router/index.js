@@ -33,10 +33,9 @@ router.post('/fetchblog', async (req, res) => {
 
 router.post('/collectionblogs', async (req, res) => {
     const { config } = req.body
-
+    console.log('/api/collectionblogs was required')
+    
     const blogs = await MYSQL.select('collection', config)
-
-    console.log(blogs, 'blogs')
     res.send({
         data: blogs,
         code: 0,
