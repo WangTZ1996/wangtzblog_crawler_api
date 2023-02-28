@@ -23,7 +23,7 @@ async function initServer () {
     app.use('/api', router);
 
     app.listen('8089', () => {
-        console.log('server is running listen port 3000')
+        console.log('server is running listen port 8089')
     });
 }
 
