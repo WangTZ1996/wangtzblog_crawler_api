@@ -11,14 +11,15 @@ const fetchBlog = async (url) => {
         //     '--no-sandbox',
         //     '--enable-blink-features=IdleDetection'
         // ],
-        // args: [
-        //     '--start-maximized', 
-        //     '--disable-infobars', 
-        //     '-no-default-browser-check',
-        //     '--start-fullscreen',
-        //     '--enable-experimental-fullscreen-exit-ui',
-        //     '--user-agent=Mozilla/5.0......',
-        // ]
+        args: [
+            // '--start-maximized', 
+            // '--disable-infobars', 
+            // '-no-default-browser-check',
+            // '--start-fullscreen',
+            // '--enable-experimental-fullscreen-exit-ui',
+            // '--user-agent=Mozilla/5.0......',
+            '--no-sandbox'
+        ]
     })
     const [ page ] = await broswer.pages()
 
