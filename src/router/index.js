@@ -7,26 +7,26 @@ const router = express.Router()
 
 // router.get('', () => {})
 
-// router.post('/fetchblog', async (req, res) => {
-//     const { url } = req.body
+router.post('/fetchblog', async (req, res) => {
+    const { url } = req.body
 
-//     const data = await fetchBlog(url)
+    const data = await fetchBlog(url)
 
-//     const insertData = {
-//         ...data,
-//         href: url,
-//         blogid: stringRandom(11),
-//     }
+    const insertData = {
+        ...data,
+        href: url,
+        blogid: stringRandom(11),
+    }
 
-//     console.log(insertData, 'insertData')
-//     await MYSQL.insert('collection', insertData)
+    console.log(insertData, 'insertData')
+    await MYSQL.insert('collection', insertData)
 
-//     res.send({
-//         data: insertData,
-//         code: 0,
-//         msg: 'insert success'
-//     })
-// });
+    res.send({
+        data: insertData,
+        code: 0,
+        msg: 'insert success'
+    })
+});
 
 router.post('/collectionblogs', async (req, res) => {
     const { config } = req.body
