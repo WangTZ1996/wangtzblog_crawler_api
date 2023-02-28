@@ -5,20 +5,20 @@ const fetchBlog = async (url) => {
     const broswer = await puppeteer.launch({
         headless: true,
         defaultViewport: null,
-        ignoreDefaultArgs: [
-            '--enable-automation',
-            '--single-process',
-            '--no-sandbox',
-            '--enable-blink-features=IdleDetection'
-        ],
-        args: [
-            '--start-maximized', 
-            '--disable-infobars', 
-            '-no-default-browser-check',
-            '--start-fullscreen',
-            '--enable-experimental-fullscreen-exit-ui',
-            '--user-agent=Mozilla/5.0......',
-        ]
+        // ignoreDefaultArgs: [
+        //     '--enable-automation',
+        //     '--single-process',
+        //     '--no-sandbox',
+        //     '--enable-blink-features=IdleDetection'
+        // ],
+        // args: [
+        //     '--start-maximized', 
+        //     '--disable-infobars', 
+        //     '-no-default-browser-check',
+        //     '--start-fullscreen',
+        //     '--enable-experimental-fullscreen-exit-ui',
+        //     '--user-agent=Mozilla/5.0......',
+        // ]
     })
     const [ page ] = await broswer.pages()
 
