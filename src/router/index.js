@@ -10,6 +10,8 @@ const router = express.Router()
 router.post('/fetchblog', async (req, res) => {
     const { url } = req.body
 
+    console.log(url, 'url')
+
     const data = await fetchBlog(url)
 
     const insertData = {
