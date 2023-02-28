@@ -23,6 +23,8 @@ const fetchBlog = async (url) => {
     })
     const [ page ] = await broswer.pages()
 
+    await page.setDefaultNavigationTimeout(0); 
+
     await page.goto(url)
 
     const pageHeader = await page.evaluate(() => {
