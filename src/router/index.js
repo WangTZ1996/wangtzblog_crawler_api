@@ -18,6 +18,7 @@ router.post('/fetchblog', async (req, res) => {
         ...data,
         href: url,
         blogid: stringRandom(11),
+        type: 'tech_link'
     }
 
     console.log(insertData, 'insertData')
