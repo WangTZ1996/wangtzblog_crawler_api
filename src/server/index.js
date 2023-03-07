@@ -32,7 +32,7 @@ async function initServer () {
     app.use(bodyParser.json());
     app.use('/api', router);
 
-    server.listen('8089', () => {
+    app.listen('8089', () => {
         console.log('server is running listen port 8089')
     });
 }

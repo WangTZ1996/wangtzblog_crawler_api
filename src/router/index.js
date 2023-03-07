@@ -32,13 +32,15 @@ router.post('/fetchblog', async (req, res) => {
 });
 
 const dbQuery = async (tableName, params) => {
-    const { keywords, page, size } = params
+    const { keywords, page, size = 10 } = params
+
+    console.log(size, 'size')
 
     let sql;
     if (keywords) {
-        sql = `select * from ${tableName} where keywords regexp '${ keywords }'`
+        sql = `select * from ${tableName} limit ${size} where keywords regexp '${ keywords }'`
     } else {
-        sql = `select * from ${tableName}`
+        sql = `select * from ${tableName} limit ${size}`
     }
     return await MYSQL.query(sql)
 }
@@ -88,6 +90,7 @@ router.post('/originalblog', async (req, res) => {
     })
 })
 
+// read the raw blog text from the block chain
 router.post('/originalblogFormChain', async (req, res) => {
     const { TransactionHash, chainIdHex } = req.body
 
