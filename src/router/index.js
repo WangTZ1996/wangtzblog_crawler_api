@@ -96,11 +96,11 @@ router.post('/originalblogFormChain', async (req, res) => {
     const web3 = new Web3(rpc)
     const block = await web3.eth.getTransaction(TransactionHash)
 
-    console.log(block, 'block')
+    let newdata = Buffer.from(block.input.replace(/^0x/, ''),'hex');
 
     if (block) {
         res.send({
-            data: block.input,
+            data: newdata.toString("utf-8"),
             code: 0,
             msg: 'inquire success'
         })
