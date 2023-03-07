@@ -1,5 +1,7 @@
 const express = require('express');
 const stringRandom = require('string-random');
+const Web3 = require('web3')
+const { CHAIN_NET_RPC } = require('../config/chain_conf')
 
 const fetchBlog = require('../crawler')
 
@@ -84,6 +86,25 @@ router.post('/originalblog', async (req, res) => {
         code: 0,
         msg: 'inquire success'
     })
+})
+
+router.post('/originalblogFormChain', async (req, res) => {
+    const { TransactionHash, chainIdHex } = req.body
+
+    const rpc = CHAIN_NET_RPC[chainIdHex]
+
+    const web3 = new Web3(rpc)
+    const block = await web3.eth.getTransaction(TransactionHash)
+
+    console.log(block, 'block')
+
+    if (block) {
+        res.send({
+            data: block.input,
+            code: 0,
+            msg: 'inquire success'
+        })
+    } 
 })
 
 module.exports = router
