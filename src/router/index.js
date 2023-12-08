@@ -4,6 +4,7 @@ const Web3 = require('web3')
 const { CHAIN_NET_RPC } = require('../config/chain_conf')
 
 const fetchBlog = require('../crawler')
+const { createTask } = require('../tempMail')
 
 const router = express.Router()
 
@@ -88,6 +89,13 @@ router.post('/originalblog', async (req, res) => {
         code: 0,
         msg: 'inquire success'
     })
+})
+
+router.post('/tempMail', async (req, res) => {
+    const taskId = stringRandom(11)
+    const mailName = stringRandom(8).toUpperCase()
+
+    createTask(taskId, mailName)
 })
 
 // read the raw blog text from the block chain

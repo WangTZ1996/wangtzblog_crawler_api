@@ -7,6 +7,7 @@ const history = require('connect-history-api-fallback');
 var bodyParser = require('body-parser')
 
 const router = require('../router')
+const { initTaskLoop } = require('../tempMail')
 
 async function initServer () {
     var options = {
@@ -31,6 +32,8 @@ async function initServer () {
     app.use(history());
     app.use(bodyParser.json());
     app.use('/api', router);
+    
+    initTaskLoop()
 
     server.listen('8089', () => {
         console.log('server is running listen port 8089')
