@@ -3,17 +3,17 @@ const taskList = []
 
 /******** mail user script ********/
 function addNewUser (userName) {
-    execSync(`useradd -g mailusers -s /sbin/nologin ${userName}`)
+    execSync(`useradd -s /sbin/nologin ${userName}`)
     execSync(`mkdir /home/${userName}`)
     execSync(`mkdir /home/${userName}/Maildir`)
     execSync(`mkdir /home/${userName}/Maildir/new`)
     execSync(`mkdir /home/${userName}/Maildir/tmp`)
     execSync(`mkdir /home/${userName}/Maildir/cur`)
-    execSync(`chmod -R 777 /home/${userName}/*`)
+    execSync(`chmod -R 666 /home/${userName}/*`)
 }
 function delUser (userName) {
     execSync(`userdel ${userName}`)
-    execSync(`rm -rf /home/${userName}`)
+    // execSync(`rm -rf /home/${userName}`)
 }
 
 /******** task script ********/
@@ -22,13 +22,14 @@ function Task(id, mailUserDir) {
 
     this.id = id
     this.createTime = t
-    this.endTime = t + 10 * 1000
-    this.maxAge = 10 * 1000
+    this.endTime = t + 10 * 60 * 1000
+    this.maxAge = 10 * 60 * 1000
     this.mailName = mailUserDir
 }
 function createTask(id, mailUserName) {
     addNewUser(mailUserName)
     const t = new Task(id, mailUserName)
+    taskList.push(t)
     return t
 }
 function removeTask(id) {
@@ -43,20 +44,19 @@ function doTask(task) {
     delUser(mailUserName)
 }
 function initTaskLoop() {
-    console.log('开启定时任务循环')
+    console.log('开启定时任务循环，定时任务周期 60s')
     const timer = setInterval(() => {
         const ts = new Date().getTime()
 
         taskList.forEach((task) => {
             if (task && task.endTime <= ts) {
-                doTask(task.mailName)
+                doTask(task)
                 removeTask(task.id)
             }
         })
-        console.log(taskList.length, 'taskList')
-    }, 1000)
+        console.log(taskList.length, ts, 'taskList')
+    }, 60 * 1000)
 }
 
 module.exports.initTaskLoop = initTaskLoop
-module.exports.addNewUser = addNewUser
 module.exports.createTask = createTask
