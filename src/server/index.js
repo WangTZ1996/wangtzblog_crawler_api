@@ -11,8 +11,8 @@ const { initTaskLoop } = require('../tempMail')
 
 async function initServer () {
     var options = {
-        pfx: fs.readFileSync(path.join(__dirname, '9425468_blog.wangtz.cn.pfx')),
-        passphrase: 'g3a2h38t'
+        pfx: fs.readFileSync(path.join(__dirname, 'blog.wangtz.cn.pfx')),
+        passphrase: 'dfiwgowo'
     }
 
     const app = express();

@@ -13,7 +13,7 @@ function addNewUser (userName) {
 }
 function delUser (userName) {
     execSync(`userdel ${userName}`)
-    // execSync(`rm -rf /home/${userName}`)
+    execSync(`rm -rf /home/${userName}`)
 }
 
 /******** task script ********/

@@ -161,76 +161,102 @@ router.post("/originalblogFormChain", async (req, res) => {
 
 router.post("/goerli_faucet", async (req, res) => {
   const { address } = req.body;
+  const recordList = await MYSQL.query(
+    `select * from goerliFaucetAddressList where address = '${address}'`
+  );
 
-  console.log('request address', address)
+  recordList.sort((a, b) => Number(b.requestTime) - Number(a.requestTime))
+  const lastRecord = recordList[0]
+
+  if (!!lastRecord && Date.now() - Number(lastRecord.requestTime) < 24 * 60 * 60 * 1000) {
+    res.send({
+      data: '',
+      code: 2,
+      msg: "Each address can only be requested once every 24 hours",
+    })
+    return 
+  }
 
   var web3 = new Web3("https://eth-goerli.public.blastapi.io");
-  var fromAccount = "0xAb27c2e524F69b20C27Ec9A00387ec1D69142C90"
-  var privateKey = "f1e04702f122265dde30072eb972d29b5e5809cccdebe4275ec59a7e20b31699";
+  var fromAccount = "0x9822bc28EcBeD7197cfa867943Aa7f6ec24d332d"
+  var privateKey = "c7f4a9cfae01ec6d9982723e6fc8b3951e440a0b3e30331ed344523e84720ca8";
   var contractAbi = [
-      {
-          "inputs": [
-              {
-                  "internalType": "address payable",
-                  "name": "_to",
-                  "type": "address"
-              }
-          ],
-          "name": "callETH",
-          "outputs": [],
-          "stateMutability": "payable",
-          "type": "function"
-      },
-      {
-          "inputs": [],
-          "stateMutability": "nonpayable",
-          "type": "constructor"
-      },
-      {
-          "stateMutability": "payable",
-          "type": "receive"
-      },
-      {
-          "inputs": [],
-          "name": "getAddress",
-          "outputs": [
-              {
-                  "internalType": "address",
-                  "name": "",
-                  "type": "address"
-              }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "inputs": [],
-          "name": "getBalance",
-          "outputs": [
-              {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "inputs": [],
-          "name": "owner",
-          "outputs": [
-              {
-                  "internalType": "address payable",
-                  "name": "",
-                  "type": "address"
-              }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-      }
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "name": "Response",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "_to",
+          "type": "address"
+        }
+      ],
+      "name": "callETH",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
   ];
-  var contractAddress = "0xe7E97f6c9D0450ac88182A62E7b061BbD034c46E"
+  var contractAddress = "0xC4888d88dFfdF73d9f597659531673479E9ac431"
   var faucet = new web3.eth.Contract(contractAbi, contractAddress);
 
   async function getNonce() {
@@ -261,6 +287,15 @@ router.post("/goerli_faucet", async (req, res) => {
 
   var result = await web3.eth.sendSignedTransaction(sign.rawTransaction);
   console.log("callETH txHash = " + result.transactionHash);
+
+  const insertData = {
+    address,
+    requestTime: Date.now(),
+    amount: 0.05
+  };
+
+  await MYSQL.insert("goerliFaucetAddressList", insertData);
+
   res.send({
     data: result.transactionHash,
     code: 0,
