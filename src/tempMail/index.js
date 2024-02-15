@@ -9,7 +9,7 @@ function addNewUser (userName) {
     execSync(`mkdir /home/${userName}/Maildir/new`)
     execSync(`mkdir /home/${userName}/Maildir/tmp`)
     execSync(`mkdir /home/${userName}/Maildir/cur`)
-    execSync(`chmod -R 666 /home/${userName}/*`)
+    execSync(`chmod -R 777 /home/${userName}/*`)
 }
 function delUser (userName) {
     execSync(`userdel ${userName}`)
